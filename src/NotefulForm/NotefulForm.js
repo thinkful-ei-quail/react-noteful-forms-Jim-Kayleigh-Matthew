@@ -21,6 +21,9 @@ class NotefulForm extends Component {
       validateFolder: {
         value: '',
       },
+      validateName:{
+        value: '',
+      }
     };
   }
 
@@ -65,9 +68,10 @@ class NotefulForm extends Component {
           onChange={(e) => this.updateNoteName(e.target.value)}
         />
         <select >
-          {folders.map(folder => {
+          {folders.map((folder,i) => {
+            
               return (
-                <option value={folder.id}>{folder.name}</option>
+                <option key={i} value={folder.id}>{folder.name}</option>
               )
             })}
         </select>
@@ -76,7 +80,10 @@ class NotefulForm extends Component {
           name="noteName"
           onChange={(e) => this.updateNoteContent(e.target.value)}
         />
-        <input type="submit" />
+        <input 
+        type="submit" 
+        name="noteSubmit"
+        onClick={(e) => this.submitNote(e)}/>
       </>
     )
   }
@@ -84,12 +91,28 @@ class NotefulForm extends Component {
   // ValidateFolder= ()=>{
   //   const name=this.
   // }
+
+  validateNote= ()=>{
+    const noteName= this.state.noteName.value;
+    if (!noteName){
+      console.log ('Please enter a name!!!');
+    }
+  }
+
+  submitNote= (e)=>{
+    console.log('submit fired');
+    e.preventDefault();
+    this.validateNote();
+
+  }
+
+
   updateFolderName = (folderName) => {
     this.setState({ folderName: { value: folderName } });
     console.log(this.state.folderName);
   };
 
-  updateNotename = (noteName) => {
+  updateNoteName = (noteName) => {
     this.setState({ noteName: { value: noteName } });
   }
 
@@ -98,6 +121,8 @@ class NotefulForm extends Component {
   }
 
   render() {
+  console.log(this.state.noteName);
+
     // fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
     //   method: 'POST',
     //   headers: {
