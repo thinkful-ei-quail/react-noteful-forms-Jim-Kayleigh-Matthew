@@ -27,6 +27,14 @@ class NotefulForm extends Component {
     viewtype: false,
   };
 
+  getFormDetails() {
+    if (this.props.viewtype) {
+      return this.getNoteInput();
+    } else {
+      return this.getFolderInput();
+    }
+  }
+
   getFolderInput() {
     return (
       <>
@@ -37,16 +45,9 @@ class NotefulForm extends Component {
           name="folderName"
           onChange={(e) => this.updateFolderName(e.target.value)}
         />
+        <input type="submit" />
       </>
     );
-  }
-
-  getFormDetails() {
-    if (this.props.viewtype) {
-      return this.getNoteInput();
-    } else {
-      return this.getFolderInput();
-    }
   }
 
   getNoteInput() {
@@ -75,8 +76,6 @@ class NotefulForm extends Component {
       <div className="container">
         <form className={["Noteful-form", className].join(" ")} action="#">
           {this.getFormDetails()}
-
-          <input type="submit" />
         </form>
       </div>
     );
