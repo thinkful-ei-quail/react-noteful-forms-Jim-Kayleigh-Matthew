@@ -2,7 +2,7 @@
 import "./NotefulForm.css";
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
-import config from "./config";
+import config from "../config";
 //import './';
 //import  from './';
 
@@ -19,6 +19,9 @@ class NotefulForm extends Component {
       noteContent: {
         value: "",
       },
+      folderId: {
+        value: ""
+      },
       isError: false,
       errorMsg: "",
     };
@@ -30,17 +33,17 @@ class NotefulForm extends Component {
     viewtype: false,
   };
 
-  getFormDetails() {
+  getFormDetails(className) {
     if (this.props.viewtype) {
-      return this.getNoteInput();
+      return this.getNoteInput(className);
     } else {
-      return this.getFolderInput();
+      return this.getFolderInput(className);
     }
   }
 
-  getFolderInput() {
+  getFolderInput(className) {
     return (
-      <>
+      <form className={["Noteful-form", className].join(" ")} action="#">
         <label htmlFor="folderName">Folder Name: </label>
         <input
           type="text"
@@ -49,14 +52,14 @@ class NotefulForm extends Component {
           onChange={(e) => this.updateFolderName(e.target.value)}
         />
         <input type="submit" />
-      </>
+      </form>
     );
   }
 
-  getNoteInput() {
+  getNoteInput(className) {
     const { folders = [] } = this.context;
     return (
-      <>
+      <form className={["Noteful-form", className].join(" ")} action="#" onSubmit={e => this.submitNote(e)}>
         <label htmlFor="noteName">Note Name: </label>
         <input
           type="text"
@@ -65,6 +68,7 @@ class NotefulForm extends Component {
           onChange={(e) => this.updateNoteName(e.target.value)}
         />
         <select onChange={(e) => this.updateFolderContent(e.target.value)}>
+          <option>Select Folder</option>
           {folders.map((folder, i) => {
             return (
               <option key={i} value={folder.id}>
@@ -81,9 +85,8 @@ class NotefulForm extends Component {
         <input
           type="submit"
           name="noteSubmit"
-          onClick={(e) => this.submitNote(e)}
         />
-      </>
+      </form>
     );
   }
 
@@ -93,7 +96,8 @@ class NotefulForm extends Component {
 
   validateNote = () => {
     const noteName = this.state.noteName.value;
-    if (!noteName) {
+    const folderId = this.state.folderId.value;
+    if (!noteName || !folderId) {
       console.log("Please enter a name!!!");
       this.setState({
         isError: true,
@@ -108,6 +112,7 @@ class NotefulForm extends Component {
     e.preventDefault();
     this.setState({ isError: false, errorMsg: "" });
     const modifiedDate = Date.now();
+    console.log(this.state);
     if (this.validateNote()) {
       //make api call
       fetch(
@@ -115,17 +120,16 @@ class NotefulForm extends Component {
         {
           method: "POST",
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: {
+          body: JSON.stringify({
             name: `${this.state.noteName.value}`,
             folderId: `${this.state.folderId.value}`,
             content: `${this.state.noteContent.value}`,
-            modifiedDate: `${modifiedDate}`,
-          },
-        }
-        // })
-      );
+            modified: `${modifiedDate}`
+          }),
+        })
+        .then(response => (console.log(response)))
     }
   };
 
@@ -143,7 +147,7 @@ class NotefulForm extends Component {
   };
 
   updateFolderContent = (folderId) => {
-    this.setState({ folderId: { value: folderId } });
+    this.setState({ folderId: { value: folderId } })
   };
 
   render() {
@@ -154,9 +158,7 @@ class NotefulForm extends Component {
     return (
       <div className="container">
         {this.state.isError && <p>{this.state.errorMsg}</p>}
-        <form className={["Noteful-form", className].join(" ")} action="#">
-          {this.getFormDetails()}
-        </form>
+        {this.getFormDetails(className)}
       </div>
     );
   }
