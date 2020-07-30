@@ -3,6 +3,7 @@ import "./NotefulForm.css";
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
+import { Route, Link } from "react-router-dom";
 //import './';
 //import  from './';
 
@@ -20,7 +21,7 @@ class NotefulForm extends Component {
         value: "",
       },
       folderId: {
-        value: ""
+        value: "",
       },
       isError: false,
       errorMsg: "",
@@ -31,6 +32,9 @@ class NotefulForm extends Component {
 
   static defaultProps = {
     viewtype: false,
+    match: {
+      params: {},
+    },
   };
 
   getFormDetails(className) {
@@ -43,7 +47,11 @@ class NotefulForm extends Component {
 
   getFolderInput(className) {
     return (
-      <form className={["Noteful-form", className].join(" ")} action="#">
+      <form
+        onSubmit={(e) => this.submitFolder(e)}
+        className={["Noteful-form", className].join(" ")}
+        action="#"
+      >
         <label htmlFor="folderName">Folder Name: </label>
         <input
           type="text"
@@ -51,7 +59,7 @@ class NotefulForm extends Component {
           name="folderName"
           onChange={(e) => this.updateFolderName(e.target.value)}
         />
-        <input type="submit" />
+        <input type="submit" name="folderSubmit" />
       </form>
     );
   }
@@ -59,7 +67,11 @@ class NotefulForm extends Component {
   getNoteInput(className) {
     const { folders = [] } = this.context;
     return (
-      <form className={["Noteful-form", className].join(" ")} action="#" onSubmit={e => this.submitNote(e)}>
+      <form
+        className={["Noteful-form", className].join(" ")}
+        action="#"
+        onSubmit={(e) => this.submitNote(e)}
+      >
         <label htmlFor="noteName">Note Name: </label>
         <input
           type="text"
@@ -82,10 +94,7 @@ class NotefulForm extends Component {
           name="noteName"
           onChange={(e) => this.updateNoteContent(e.target.value)}
         />
-        <input
-          type="submit"
-          name="noteSubmit"
-        />
+        <input type="submit" name="noteSubmit" />
       </form>
     );
   }
@@ -93,6 +102,18 @@ class NotefulForm extends Component {
   // ValidateFolder= ()=>{
   //   const name=this.
   // }
+
+  validateFolder = () => {
+    const folderName = this.state.folderName.value;
+    if (!folderName) {
+      this.setState({
+        isError: true,
+        errorMsg: "Folder name is required",
+      });
+      return false;
+    }
+    return true;
+  };
 
   validateNote = () => {
     const noteName = this.state.noteName.value;
@@ -115,21 +136,34 @@ class NotefulForm extends Component {
     console.log(this.state);
     if (this.validateNote()) {
       //make api call
-      fetch(
-        `${config.API_ENDPOINT}/notes`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: `${this.state.noteName.value}`,
-            folderId: `${this.state.folderId.value}`,
-            content: `${this.state.noteContent.value}`,
-            modified: `${modifiedDate}`
-          }),
-        })
-        .then(response => (console.log(response)))
+      fetch(`${config.API_ENDPOINT}/notes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `${this.state.noteName.value}`,
+          folderId: `${this.state.folderId.value}`,
+          content: `${this.state.noteContent.value}`,
+          modified: `${modifiedDate}`,
+        }),
+      }).then((response) => console.log(response));
+    }
+  };
+
+  submitFolder = (e) => {
+    e.preventDefault();
+    this.setState({ isError: false, errorMsg: "" });
+    if (this.validateFolder()) {
+      fetch(`${config.API_ENDPOINT}/folders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `${this.state.folderName.value}`,
+        }),
+      }).then((response) => this.props.history.push(`/`));
     }
   };
 
@@ -147,7 +181,7 @@ class NotefulForm extends Component {
   };
 
   updateFolderContent = (folderId) => {
-    this.setState({ folderId: { value: folderId } })
+    this.setState({ folderId: { value: folderId } });
   };
 
   render() {
