@@ -1,7 +1,8 @@
 // import React from 'react'
 import "./NotefulForm.css";
 import React, { Component } from "react";
-import ApiContext from '../ApiContext';
+import ApiContext from "../ApiContext";
+import config from "./config";
 //import './';
 //import  from './';
 
@@ -10,24 +11,20 @@ class NotefulForm extends Component {
     super(props);
     this.state = {
       folderName: {
-        value: '',
+        value: "",
       },
       noteName: {
-        value: '',
+        value: "",
       },
       noteContent: {
-        value: ''
+        value: "",
       },
-      validateFolder: {
-        value: '',
-      },
-      validateName:{
-        value: '',
-      }
+      isError: false,
+      errorMsg: "",
     };
   }
 
-  static contextType = ApiContext
+  static contextType = ApiContext;
 
   static defaultProps = {
     viewtype: false,
@@ -57,7 +54,7 @@ class NotefulForm extends Component {
   }
 
   getNoteInput() {
-    const { folders=[] } = this.context
+    const { folders = [] } = this.context;
     return (
       <>
         <label htmlFor="noteName">Note Name: </label>
@@ -67,45 +64,70 @@ class NotefulForm extends Component {
           name="noteName"
           onChange={(e) => this.updateNoteName(e.target.value)}
         />
-        <select >
-          {folders.map((folder,i) => {
-            
-              return (
-                <option key={i} value={folder.id}>{folder.name}</option>
-              )
-            })}
+        <select onChange={(e) => this.updateFolderContent(e.target.value)}>
+          {folders.map((folder, i) => {
+            return (
+              <option key={i} value={folder.id}>
+                {folder.name}
+              </option>
+            );
+          })}
         </select>
         <textarea
           defaultValue="My note content"
           name="noteName"
           onChange={(e) => this.updateNoteContent(e.target.value)}
         />
-        <input 
-        type="submit" 
-        name="noteSubmit"
-        onClick={(e) => this.submitNote(e)}/>
+        <input
+          type="submit"
+          name="noteSubmit"
+          onClick={(e) => this.submitNote(e)}
+        />
       </>
-    )
+    );
   }
 
   // ValidateFolder= ()=>{
   //   const name=this.
   // }
 
-  validateNote= ()=>{
-    const noteName= this.state.noteName.value;
-    if (!noteName){
-      console.log ('Please enter a name!!!');
+  validateNote = () => {
+    const noteName = this.state.noteName.value;
+    if (!noteName) {
+      console.log("Please enter a name!!!");
+      this.setState({
+        isError: true,
+        errorMsg: "Note name is required.",
+      });
+      return false;
     }
-  }
+    return true;
+  };
 
-  submitNote= (e)=>{
-    console.log('submit fired');
+  submitNote = (e) => {
     e.preventDefault();
-    this.validateNote();
-
-  }
-
+    this.setState({ isError: false, errorMsg: "" });
+    const modifiedDate = Date.now();
+    if (this.validateNote()) {
+      //make api call
+      fetch(
+        `${config.API_ENDPOINT}/notes`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: {
+            name: `${this.state.noteName.value}`,
+            folderId: `${this.state.folderId.value}`,
+            content: `${this.state.noteContent.value}`,
+            modifiedDate: `${modifiedDate}`,
+          },
+        }
+        // })
+      );
+    }
+  };
 
   updateFolderName = (folderName) => {
     this.setState({ folderName: { value: folderName } });
@@ -114,27 +136,24 @@ class NotefulForm extends Component {
 
   updateNoteName = (noteName) => {
     this.setState({ noteName: { value: noteName } });
-  }
+  };
 
-  updateNoteContent =(noteContent) =>{
+  updateNoteContent = (noteContent) => {
     this.setState({ noteContent: { value: noteContent } });
-  }
+  };
+
+  updateFolderContent = (folderId) => {
+    this.setState({ folderId: { value: folderId } });
+  };
 
   render() {
-  console.log(this.state.noteName);
+    console.log(this.state.noteName);
 
-    // fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'content-type': 'application/json'
-    //   },
-    //   body: { }
-    //}
-    // })
     const { className, ...otherProps } = this.props;
 
     return (
       <div className="container">
+        {this.state.isError && <p>{this.state.errorMsg}</p>}
         <form className={["Noteful-form", className].join(" ")} action="#">
           {this.getFormDetails()}
         </form>
