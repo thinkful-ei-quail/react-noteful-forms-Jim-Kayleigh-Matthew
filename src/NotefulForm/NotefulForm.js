@@ -1,9 +1,7 @@
 // import React from 'react'
 import "./NotefulForm.css";
 import React, { Component } from "react";
-//import './';
-//import  from './';
-
+import ApiContext from '../ApiContext';
 //import './';
 //import  from './';
 
@@ -12,16 +10,21 @@ class NotefulForm extends Component {
     super(props);
     this.state = {
       folderName: {
-        value: "",
+        value: '',
       },
-      noteNote: {
-        value: "",
+      noteName: {
+        value: '',
+      },
+      noteContent: {
+        value: ''
       },
       validateFolder: {
-        value: "",
+        value: '',
       },
     };
   }
+
+  static contextType = ApiContext
 
   static defaultProps = {
     viewtype: false,
@@ -51,7 +54,31 @@ class NotefulForm extends Component {
   }
 
   getNoteInput() {
-    return <h3>THIS WILL BE A NOTE INPUT</h3>;
+    const { folders=[] } = this.context
+    return (
+      <>
+        <label htmlFor="noteName">Note Name: </label>
+        <input
+          type="text"
+          defaultValue="My Note Name :-)"
+          name="noteName"
+          onChange={(e) => this.updateNoteName(e.target.value)}
+        />
+        <select >
+          {folders.map(folder => {
+              return (
+                <option value={folder.id}>{folder.name}</option>
+              )
+            })}
+        </select>
+        <textarea
+          defaultValue="My note content"
+          name="noteName"
+          onChange={(e) => this.updateNoteContent(e.target.value)}
+        />
+        <input type="submit" />
+      </>
+    )
   }
 
   // ValidateFolder= ()=>{
@@ -61,6 +88,15 @@ class NotefulForm extends Component {
     this.setState({ folderName: { value: folderName } });
     console.log(this.state.folderName);
   };
+
+  updateNotename = (noteName) => {
+    this.setState({ noteName: { value: noteName } });
+  }
+
+  updateNoteContent =(noteContent) =>{
+    this.setState({ noteContent: { value: noteContent } });
+  }
+
   render() {
     // fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
     //   method: 'POST',
