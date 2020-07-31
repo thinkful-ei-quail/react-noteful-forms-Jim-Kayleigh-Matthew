@@ -3,7 +3,7 @@ import "./NotefulForm.css";
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
-import { Route, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 //import './';
 //import  from './';
 
@@ -25,6 +25,7 @@ class NotefulForm extends Component {
       },
       isError: false,
       errorMsg: "",
+      redirect: null
     };
   }
 
@@ -163,7 +164,11 @@ class NotefulForm extends Component {
         body: JSON.stringify({
           name: `${this.state.folderName.value}`,
         }),
-      }).then((response) => this.props.history.push(`/`));
+      }).then((res) => {
+        this.setState({
+          redirect: '/'
+        })
+      });
     }
   };
 
@@ -186,6 +191,10 @@ class NotefulForm extends Component {
 
   render() {
     console.log(this.state.noteName);
+
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
 
     const { className, ...otherProps } = this.props;
 
