@@ -148,7 +148,11 @@ class NotefulForm extends Component {
           content: `${this.state.noteContent.value}`,
           modified: `${modifiedDate}`,
         }),
-      }).then((response) => console.log(response));
+      }).then((response) => {
+        this.setState({
+          redirect: '/'
+        })
+      });
     }
   };
 
