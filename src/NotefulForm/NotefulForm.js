@@ -56,7 +56,7 @@ class NotefulForm extends Component {
         <label htmlFor="folderName">Folder Name: </label>
         <input
           type="text"
-          defaultValue="MyFolderName"
+          placeholder="MyFolderName"
           name="folderName"
           onChange={(e) => this.updateFolderName(e.target.value)}
         />
@@ -76,7 +76,7 @@ class NotefulForm extends Component {
         <label htmlFor="noteName">Note Name: </label>
         <input
           type="text"
-          defaultValue="My Note Name :-)"
+          placeholder="My Note Name :-)"
           name="noteName"
           onChange={(e) => this.updateNoteName(e.target.value)}
         />
@@ -91,7 +91,7 @@ class NotefulForm extends Component {
           })}
         </select>
         <textarea
-          defaultValue="My note content"
+          placeholder="My note content"
           name="noteName"
           onChange={(e) => this.updateNoteContent(e.target.value)}
         />
