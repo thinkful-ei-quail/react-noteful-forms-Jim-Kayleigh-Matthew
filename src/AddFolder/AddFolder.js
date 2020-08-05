@@ -75,11 +75,7 @@ export default class AddFolder extends Component {
     this.history = otherProps.history;
     return (
       <>
-        <form
-          onSubmit={(e) => this.submitFolder(e)}
-          className={["Noteful-form", className].join(" ")}
-          action="#"
-        >
+        <NotefulForm onSubmit={(e) => this.submitFolder(e)}>
           <label htmlFor="folderName">Folder Name: </label>
           <input
             type="text"
@@ -88,7 +84,7 @@ export default class AddFolder extends Component {
             onChange={(e) => this.updateFolderName(e.target.value)}
           />
           <input type="submit" name="folderSubmit" />
-        </form>
+        </NotefulForm>
         {this.state.isError && <p>{this.state.errorMsg}</p>}
       </>
     );

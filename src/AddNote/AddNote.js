@@ -95,11 +95,7 @@ export default class AddNote extends Component {
     this.history = otherProps.history;
     return (
       <>
-        <form
-        className={["Noteful-form", className].join(" ")}
-        action="#"
-        onSubmit={(e) => this.submitNote(e)}
-        >
+        <NotefulForm onSubmit={(e) => this.submitNote(e)}>
           <label htmlFor="noteName">Note Name: </label>
           <input
             type="text"
@@ -123,7 +119,7 @@ export default class AddNote extends Component {
             onChange={(e) => this.updateNoteContent(e.target.value)}
           />
           <input type="submit" name="noteSubmit" />
-        </form>
+        </NotefulForm>
         {this.state.isError && <p>{this.state.errorMsg}</p>}
       </>
     );
