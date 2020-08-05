@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ApiContext from '../ApiContext';
 import NotefulForm from "../NotefulForm/NotefulForm";
 import config from '../config';
-import { isThisSecond } from "date-fns";
 
 export default class AddFolder extends Component {
   constructor(props) {
@@ -101,4 +101,8 @@ export default class AddFolder extends Component {
       </>
     );
   }
+}
+
+AddFolder.propTypes = {
+  className: PropTypes.string
 }

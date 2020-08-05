@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ApiContext from '../ApiContext';
 import config from '../config';
 import NotefulForm from "../NotefulForm/NotefulForm";
@@ -134,4 +135,8 @@ export default class AddNote extends Component {
       </>
     );
   }
+}
+
+AddNote.propTypes = {
+  className: PropTypes.string
 }
