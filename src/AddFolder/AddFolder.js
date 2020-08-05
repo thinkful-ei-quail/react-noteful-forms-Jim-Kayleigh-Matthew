@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import ApiContext from '../ApiContext';
 import NotefulForm from "../NotefulForm/NotefulForm";
 import config from '../config';
+import { isThisSecond } from "date-fns";
 
 export default class AddFolder extends Component {
   constructor(props) {
@@ -53,11 +54,22 @@ export default class AddFolder extends Component {
         body: JSON.stringify({
           name: `${this.state.folderName.value}`,
         }),
-      }).then((res) => {
+      })
+      .then((res) => {
+        if (!res.ok) return res.json().then((e) => Promise.reject(e));
+        return res.json();
+      })
+      .then((res) => {
         this.context.addFolder();
         this.setState({
           redirect: "/",
         });
+      })
+      .catch((error) => {
+        this.setState({
+          isError: true,
+          errorMsg: error.message
+        })
       });
     }
   };

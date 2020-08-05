@@ -64,15 +64,25 @@ export default class AddNote extends Component {
           content: `${this.state.noteContent.value}`,
           modified: `${modifiedDate}`,
         }),
-      }).then((response) => {
+      })
+      .then((res) => {
+        if (!res.ok) return res.json().then((e) => Promise.reject(e));
+        return res.json();
+      })
+      .then((response) => {
         this.context.addNote();
         this.setState({
           redirect: "/",
         });
+      })
+      .catch((error) => {
+        this.setState({
+          isError: true,
+          errorMsg: error.message
+        })
       });
     }
   };
-
 
   updateNoteName = (noteName) => {
     this.setState({ noteName: { value: noteName } });
