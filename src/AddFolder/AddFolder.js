@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
-import NotefulForm from '../NotefulForm/NotefulForm'
-import config from '../config'
+import React, { Component } from "react";
+import NotefulForm from "../NotefulForm/NotefulForm";
 
 // fetch(`${config.API_ENDPOINT}/folders/`, {
 //   method: 'POST',
@@ -9,12 +8,11 @@ import config from '../config'
 //   },
 // })
 export default class AddFolder extends Component {
-  render () {
+  render() {
     return (
       <>
-        <h1>Some text in the add folder</h1>
-        <NotefulForm />
+        <NotefulForm history={this.props.history} />
       </>
-    )
+    );
   }
 }

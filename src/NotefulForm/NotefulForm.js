@@ -25,7 +25,7 @@ class NotefulForm extends Component {
       },
       isError: false,
       errorMsg: "",
-      redirect: null
+      redirect: null,
     };
   }
 
@@ -149,9 +149,10 @@ class NotefulForm extends Component {
           modified: `${modifiedDate}`,
         }),
       }).then((response) => {
+        this.context.addNote();
         this.setState({
-          redirect: '/'
-        })
+          redirect: "/",
+        });
       });
     }
   };
@@ -169,9 +170,10 @@ class NotefulForm extends Component {
           name: `${this.state.folderName.value}`,
         }),
       }).then((res) => {
+        this.context.addFolder();
         this.setState({
-          redirect: '/'
-        })
+          redirect: "/",
+        });
       });
     }
   };
@@ -201,7 +203,7 @@ class NotefulForm extends Component {
     }
 
     const { className, ...otherProps } = this.props;
-
+    this.history = otherProps.history;
     return (
       <div className="container">
         {this.state.isError && <p>{this.state.errorMsg}</p>}
