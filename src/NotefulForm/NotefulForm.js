@@ -3,7 +3,7 @@ import "./NotefulForm.css";
 import React, { Component } from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
-import { Route, Link } from "react-router-dom";
+//import { Route, Link } from "react-router-dom";
 //import './';
 //import  from './';
 
@@ -64,7 +64,7 @@ class NotefulForm extends Component {
     );
   }
 
-  getNoteInput(className) {
+    (className) {
     const { folders = [] } = this.context;
     return (
       <form
@@ -148,6 +148,11 @@ class NotefulForm extends Component {
           modified: `${modifiedDate}`,
         }),
       }).then((response) => console.log(response));
+      // .then((response) =>{
+      //    console.log(response);
+      //    console.log(this.props);
+      //    this.props.history.push('/');
+      // });
     }
   };
 
@@ -164,6 +169,14 @@ class NotefulForm extends Component {
           name: `${this.state.folderName.value}`,
         }),
       }).then((response) => this.props.history.push(`/`));
+      //.then((response) => ;
+      // .then((response)=> {
+      //   console.log(response);
+      //     this.props.history.push(`/`)
+
+        
+      
+      // }).catch(error=>(console.log(error)))
     }
   };
 
@@ -197,7 +210,7 @@ class NotefulForm extends Component {
     );
   }
 }
-
+  
 export default NotefulForm;
 
 /* Removed otherProps to avoid DOM error with viewtype

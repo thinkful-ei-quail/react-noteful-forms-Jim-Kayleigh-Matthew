@@ -5,7 +5,10 @@ export default class AddNote extends Component {
   render() {
     return (
       <>
-        <NotefulForm viewtype={true} />
+        <NotefulForm
+          // path='/'
+          viewtype={true}
+         />
       </>
     );
   }
