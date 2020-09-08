@@ -19,9 +19,10 @@ class App extends Component {
   };
 
   componentDidMount() {
+    console.log(`${config.API_ENDPOINT}/notes`)
     Promise.all([
       fetch(`${config.API_ENDPOINT}/notes`),
-      fetch(`${config.API_ENDPOINT}/folder`),
+      fetch(`${config.API_ENDPOINT}/folders`),
     ])
       .then(([notesRes, foldersRes]) => {
         if (!notesRes.ok) return notesRes.json().then((e) => Promise.reject(e));
@@ -86,7 +87,7 @@ class App extends Component {
 
   //todo Get 'folder' response object from Noteful Form "POST" call and return the folder object and just push it onto current folders array and call setState to save fetch/reload?
   handleAddFolder = () => {
-    fetch(`${config.API_ENDPOINT}/folder`)
+    fetch(`${config.API_ENDPOINT}/folders`)
       .then((res) => res.json())
       .then((folders) => {
         this.setState({

@@ -46,7 +46,7 @@ export default class AddFolder extends Component {
     e.preventDefault();
     this.setState({ isError: false, errorMsg: "" });
     if (this.validateFolder()) {
-      fetch(`${config.API_ENDPOINT}/folder`, {
+      fetch(`${config.API_ENDPOINT}/folders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,4 +105,4 @@ export default class AddFolder extends Component {
 
 AddFolder.propTypes = {
   className: PropTypes.string
-}
+};
