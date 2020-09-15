@@ -36,11 +36,18 @@ export default class AddNote extends Component {
   validateNote = () => {
     const noteName = this.state.noteName.value;
     const folderId = this.state.folderId.value;
-    if (!noteName || !folderId) {
+    if (!noteName) {
       console.log("Please enter a name!!!");
       this.setState({
         isError: true,
         errorMsg: "Note name is required.",
+      });
+      return false;
+    }else if (!folderId || folderId === `Select Folder`) {
+      console.log("Please choose a folder!!!");
+      this.setState({
+        isError: true,
+        errorMsg: "Folder name is required.",
       });
       return false;
     }
@@ -98,6 +105,7 @@ export default class AddNote extends Component {
   };
   
   render() {
+    console.log(this.state.folderId)
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
